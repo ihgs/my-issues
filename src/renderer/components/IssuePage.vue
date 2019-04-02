@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{errorMsg}}
     <ul>
       <li v-for="issue in issues" v-bind:key="issue.id">
         <div class="alt" @click="open(issue.url)">{{issue.subject}}</div>
@@ -18,13 +19,18 @@ export default {
   data () {
     return {
       configJson: [],
-      issues: []
+      issues: [],
+      errorMsg: ''
     }
   },
   created: function () {
-    const configPath = path.join(__dirname, '../../..', 'myissue.json')
-    const data = fs.readFileSync(configPath, {encoding: 'utf-8'})
-    this.configJson = JSON.parse(data)
+    const configPath = path.join('./myissue.json')
+    try {
+      const data = fs.readFileSync(configPath, {encoding: 'utf-8'})
+      this.configJson = JSON.parse(data)
+    } catch (err) {
+      this.errorMsg = err
+    }
   },
   mounted: function () {
     this.configJson.forEach(target => {
