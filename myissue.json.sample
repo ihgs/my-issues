@@ -1,0 +1,7 @@
+[
+    {
+        "type": "redmine",
+        "url": "http://localhost:3001",
+        "token": "e6d3d145c70372cbb7918791ca6064e1c9ca7187"
+    }
+]
