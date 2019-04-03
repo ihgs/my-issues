@@ -1,7 +1,15 @@
 [
     {
         "type": "redmine",
+        "name": "Local Redmine",
         "url": "http://localhost:3001",
-        "token": "e6d3d145c70372cbb7918791ca6064e1c9ca7187"
+        "token": "xxxxxxxxxxxx"
+    },
+    {
+        "type": "gitlab",
+        "name": "Gitlab",
+        "url": "https://gitlab.com",
+        "token": "xxxxxxxxxxx",
+        "userid": 1000
     }
 ]
