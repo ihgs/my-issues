@@ -1,25 +1,36 @@
 <template>
   <div>
-    {{errorMsg}}
-    <ul>
-      <li v-for="issue in issues" v-bind:key="issue.id">
-        <div class="alt" @click="open(issue.url)">{{issue.subject}}</div>
-      </li>
-    </ul>
+    <b-alert show dismissible fade v-if="errorMsg" variant="danger">
+      {{errorMsg}}
+    </b-alert>
+    <b-list-group>
+      <b-list-group-item v-for="(config, index) in configJson" :key="index">
+        <div v-if="config.type === 'redmine'">
+          <redmine-issues :config="config"></redmine-issues>
+        </div>
+        <div v-else-if="config.type === 'gitlab'">
+          <gitlab-issues :config="config"></gitlab-issues>
+        </div>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
+import RedmineIssues from './issues/RedmineIssues'
+import GitlabIssues from './issues/GitLabIssues'
 
 export default {
   name: 'IssuePage',
+  components: {
+    'redmine-issues': RedmineIssues,
+    'gitlab-issues': GitlabIssues
+  },
   data () {
     return {
       configJson: [],
-      issues: [],
       errorMsg: ''
     }
   },
@@ -31,25 +42,6 @@ export default {
     } catch (err) {
       this.errorMsg = err
     }
-  },
-  mounted: function () {
-    this.configJson.forEach(target => {
-      const headers = {
-        'Content-Type': 'application/json;charset=UTF-8'
-      }
-      const url = `${target.url}/issues.json?assigned_to_id=me&key=${target.token}`
-      axios.get(url, headers)
-        .then(response => {
-          response.data.issues.forEach(issue => {
-            this.issues.push(
-              {
-                'subject': issue.subject,
-                'url': `${target.url}/issues/${issue.id}`
-              }
-            )
-          })
-        })
-    })
   },
   methods: {
     open (link) {
