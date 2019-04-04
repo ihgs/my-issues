@@ -36,7 +36,7 @@ export default {
     }
   },
   created: function () {
-    const configPath = path.join(remote.app.getPath('home'), '.myissue.json')
+    const configPath = path.join(remote.app.getPath('home'), '.myissues.json')
     try {
       const data = fs.readFileSync(configPath, {encoding: 'utf-8'})
       this.configJson = JSON.parse(data)
