@@ -21,6 +21,7 @@ import fs from 'fs'
 import path from 'path'
 import RedmineIssues from './issues/RedmineIssues'
 import GitlabIssues from './issues/GitLabIssues'
+import { remote } from 'electron'
 
 export default {
   name: 'IssuePage',
@@ -35,7 +36,7 @@ export default {
     }
   },
   created: function () {
-    const configPath = path.join('./myissue.json')
+    const configPath = path.join(remote.app.getPath('home'), '.myissue.json')
     try {
       const data = fs.readFileSync(configPath, {encoding: 'utf-8'})
       this.configJson = JSON.parse(data)

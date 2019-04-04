@@ -1,12 +1,18 @@
 <template>
   <div>
-    {{config.name}}
+    <div class="d-flex w-100 justify-content-between">
+      {{config.name}}
+      <div>
+        <b-spinner v-if="loading" small label="Spinning"></b-spinner>
+        <font-awesome-icon v-else icon="redo" @click="load()"/>
+      </div>
+    </div>
     <b-list-group>
       <b-list-group-item v-for="issue in issues" v-bind:key="issue.id">
         <div class="d-flex w-100 justify-content-between">
           <div>
-          <b-link @click="open(issue.url)">{{issue.subject}}</b-link>
-          @{{issue.project}}
+            <b-link @click="open(issue.url)">{{issue.subject}}</b-link>
+            @{{issue.project}}
           </div>
           <small v-if="issue.due_date">~ {{issue.due_date}}</small>
         </div>
@@ -23,29 +29,36 @@ export default {
   props: ['config'],
   data () {
     return {
-      issues: []
+      issues: [],
+      loading: true
     }
   },
   mounted: function () {
-    const headers = {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-    const url = `${this.config.url}/issues.json?assigned_to_id=me&key=${this.config.token}`
-    axios.get(url, headers)
-      .then(response => {
-        response.data.issues.forEach(issue => {
-          this.issues.push(
-            {
-              'subject': issue.subject,
-              'url': `${this.config.url}/issues/${issue.id}`,
-              'project': issue.project.name,
-              'due_date': issue.due_date
-            }
-          )
-        })
-      })
+    this.load()
   },
   methods: {
+    load () {
+      this.loading = true
+      this.issues = []
+      const headers = {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+      const url = `${this.config.url}/issues.json?assigned_to_id=me&key=${this.config.token}`
+      axios.get(url, headers)
+        .then(response => {
+          this.loading = false
+          response.data.issues.forEach(issue => {
+            this.issues.push(
+              {
+                'subject': issue.subject,
+                'url': `${this.config.url}/issues/${issue.id}`,
+                'project': issue.project.name,
+                'due_date': issue.due_date
+              }
+            )
+          })
+        })
+    },
     open (link) {
       this.$electron.shell.openExternal(link)
     }
