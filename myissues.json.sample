@@ -9,7 +9,6 @@
         "type": "gitlab",
         "name": "Gitlab",
         "url": "https://gitlab.com",
-        "token": "xxxxxxxxxxx",
-        "userid": 1000
+        "token": "xxxxxxxxxxx"
     }
 ]

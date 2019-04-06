@@ -34,17 +34,39 @@ export default {
     }
   },
   mounted: function () {
-    this.load()
+    this.loadUserId().then(() => {
+      this.load()
+    })
   },
   methods: {
+    async loadUserId () {
+      const url = `${this.config.url}/api/v4/user`
+      const config = {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Private-Token': this.config.token
+        },
+        data: {}
+      }
+      const response = await axios.get(url, config)
+      this.authenticatedUserId = response.data.id
+    },
     load () {
       this.issues = []
       this.loading = true
-      const headers = {
-        'Content-Type': 'application/json;charset=UTF-8'
+      const defaultQuery = {
+        'assignee_id': this.authenticatedUserId,
+        'state': 'opened'
       }
-      const url = `${this.config.url}/api/v4/issues?assignee_id=${this.config.userid}&state=opened&private_token=${this.config.token}`
-      axios.get(url, headers)
+      const config = {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Private-Token': this.config.token
+        },
+        params: Object.assign(defaultQuery, this.config.query)
+      }
+      const url = `${this.config.url}/api/v4/issues`
+      axios.get(url, config)
         .then(response => {
           this.loading = false
           response.data.forEach(issue => {

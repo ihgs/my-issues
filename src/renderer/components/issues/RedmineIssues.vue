@@ -40,11 +40,18 @@ export default {
     load () {
       this.loading = true
       this.issues = []
-      const headers = {
-        'Content-Type': 'application/json;charset=UTF-8'
+      const defaultQuery = {
+        'assigned_to_id': 'me',
+        'key': this.config.token
       }
-      const url = `${this.config.url}/issues.json?assigned_to_id=me&key=${this.config.token}`
-      axios.get(url, headers)
+      const config = {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        params: Object.assign(defaultQuery, this.config.query)
+      }
+      const url = `${this.config.url}/issues.json`
+      axios.get(url, config)
         .then(response => {
           this.loading = false
           response.data.issues.forEach(issue => {
