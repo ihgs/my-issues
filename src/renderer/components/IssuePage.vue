@@ -36,7 +36,10 @@ export default {
     }
   },
   created: function () {
-    const configPath = path.join(remote.app.getPath('home'), '.myissues.json')
+    let configPath = process.env.MYISSUES_CONFIG_FILE
+    if (configPath === undefined) {
+      configPath = path.join(remote.app.getPath('home'), '.myissues.json')
+    }
     try {
       const data = fs.readFileSync(configPath, {encoding: 'utf-8'})
       this.configJson = JSON.parse(data)
