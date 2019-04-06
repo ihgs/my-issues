@@ -7,6 +7,9 @@
         <font-awesome-icon v-else icon="redo" @click="load()"/>
       </div>
     </div>
+    <b-alert show dismissible fade v-if="errorMsg" variant="danger">
+      {{errorMsg}}
+    </b-alert>
     <b-list-group>
       <b-list-group-item v-for="issue in issues" v-bind:key="issue.id" >
         <div class="d-flex w-100 justify-content-between">
@@ -30,13 +33,17 @@ export default {
   data () {
     return {
       issues: [],
-      loading: true
+      loading: true,
+      errorMsg: ''
     }
   },
   mounted: function () {
     this.loadUserId().then(() => {
       this.load()
     })
+      .catch(error => {
+        this.setErrorMsg(error)
+      })
   },
   methods: {
     async loadUserId () {
@@ -51,9 +58,14 @@ export default {
       const response = await axios.get(url, config)
       this.authenticatedUserId = response.data.id
     },
+    setErrorMsg (error) {
+      this.errorMsg = error
+      this.loading = false
+    },
     load () {
       this.issues = []
       this.loading = true
+      this.errorMsg = ''
       const defaultQuery = {
         'assignee_id': this.authenticatedUserId,
         'state': 'opened'
@@ -79,6 +91,9 @@ export default {
               }
             )
           })
+        })
+        .catch(error => {
+          this.setErrorMsg(error)
         })
     },
     open (link) {

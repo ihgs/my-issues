@@ -7,6 +7,9 @@
         <font-awesome-icon v-else icon="redo" @click="load()"/>
       </div>
     </div>
+    <b-alert show dismissible fade v-if="errorMsg" variant="danger">
+      {{errorMsg}}
+    </b-alert>
     <b-list-group>
       <b-list-group-item v-for="issue in issues" v-bind:key="issue.id">
         <div class="d-flex w-100 justify-content-between">
@@ -30,16 +33,22 @@ export default {
   data () {
     return {
       issues: [],
-      loading: true
+      loading: true,
+      errorMsg: ''
     }
   },
   mounted: function () {
     this.load()
   },
   methods: {
+    setErrorMsg (error) {
+      this.errorMsg = error
+      this.loading = false
+    },
     load () {
       this.loading = true
       this.issues = []
+      this.errorMsg = ''
       const defaultQuery = {
         'assigned_to_id': 'me',
         'key': this.config.token
@@ -64,6 +73,9 @@ export default {
               }
             )
           })
+        })
+        .catch(error => {
+          this.setErrorMsg(error)
         })
     },
     open (link) {
