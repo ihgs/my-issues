@@ -2,7 +2,13 @@
     {
         "type": "redmine",
         "name": "Local Redmine",
-        "url": "http://localhost:3001",
+        "url": "http://localhost:3000",
+        "token": "xxxxxxxxxxxx"
+    },
+    {
+        "type": "redmine",
+        "name": "Ohter Redmine",
+        "url": "http://xxxxxxxx/redmine",
         "token": "xxxxxxxxxxxx"
     },
     {
