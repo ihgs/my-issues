@@ -49,7 +49,7 @@ export default {
       this.loading = true
       this.issues = []
       this.errorMsg = ''
-      const defaultQuery = {
+      const defaultParams = {
         'assigned_to_id': 'me',
         'key': this.config.token
       }
@@ -57,7 +57,7 @@ export default {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        params: Object.assign(defaultQuery, this.config.query)
+        params: Object.assign(defaultParams, this.config.params)
       }
       const url = `${this.config.url}/issues.json`
       axios.get(url, config)

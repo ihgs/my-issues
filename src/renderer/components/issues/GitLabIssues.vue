@@ -66,7 +66,7 @@ export default {
       this.issues = []
       this.loading = true
       this.errorMsg = ''
-      const defaultQuery = {
+      const defaultParams = {
         'assignee_id': this.authenticatedUserId,
         'state': 'opened'
       }
@@ -75,7 +75,7 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
           'Private-Token': this.config.token
         },
-        params: Object.assign(defaultQuery, this.config.query)
+        params: Object.assign(defaultParams, this.config.params)
       }
       const url = `${this.config.url}/api/v4/issues`
       axios.get(url, config)

@@ -13,6 +13,7 @@
         </div>
       </b-list-group-item>
     </b-list-group>
+    <div class="version">v{{version}}</div>
   </div>
 </template>
 
@@ -36,6 +37,8 @@ export default {
     }
   },
   created: function () {
+    this.version = remote.app.getVersion()
+
     let configPath = process.env.MYISSUES_CONFIG_FILE
     if (configPath === undefined) {
       configPath = path.join(remote.app.getPath('home'), '.myissues.json')
@@ -56,5 +59,8 @@ export default {
 </script>
 
 <style>
-
+.version {
+  text-align: right;
+  color: lightgrey;
+}
 </style>
