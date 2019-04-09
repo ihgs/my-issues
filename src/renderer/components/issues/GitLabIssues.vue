@@ -21,6 +21,18 @@
         </div>
       </b-list-group-item>
     </b-list-group>
+    <div v-if="mrs.length">Merge Request</div>
+    <b-list-group>
+      <b-list-group-item v-for="mr in mrs" v-bind:key="mr.id">
+        <div class="d-flex w-100 justify-content-between">
+          <div>
+            <b-link @click="open(mr.url)">{{mr.subject}}</b-link>
+            @{{mr.project}}
+          </div>
+          <small v-if="mr.due_date">~ {{mr.due_date}}</small>
+        </div>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
@@ -33,6 +45,7 @@ export default {
   data () {
     return {
       issues: [],
+      mrs: [],
       loading: true,
       errorMsg: ''
     }
@@ -64,6 +77,7 @@ export default {
     },
     load () {
       this.issues = []
+      this.mrs = []
       this.loading = true
       this.errorMsg = ''
       const defaultParams = {
@@ -94,6 +108,21 @@ export default {
         })
         .catch(error => {
           this.setErrorMsg(error)
+        })
+      const mrurl = `${this.config.url}/api/v4/merge_requests`
+      axios.get(mrurl, config)
+        .then(response => {
+          this.loading = false
+          response.data.forEach(mr => {
+            this.mrs.push(
+              {
+                'subject': mr.title,
+                'url': mr.web_url,
+                'due_date': mr.due_date,
+                'project': this.project(mr.web_url)
+              }
+            )
+          })
         })
     },
     open (link) {
