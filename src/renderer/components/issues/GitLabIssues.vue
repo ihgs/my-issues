@@ -82,7 +82,8 @@ export default {
       this.errorMsg = ''
       const defaultParams = {
         'assignee_id': this.authenticatedUserId,
-        'state': 'opened'
+        'state': 'opened',
+        'scope': 'all'
       }
       const config = {
         headers: {
